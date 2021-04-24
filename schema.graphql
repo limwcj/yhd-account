@@ -1,0 +1,29 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AccountOutput {
+  id: String!
+  nickname: String!
+  sex: String!
+  headimg: String
+  regTime: Date
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  accounts: AccountOutput!
+}
+
+type Mutation {
+  register(RegisterInput: RegisterInput!): AccountOutput!
+}
+
+input RegisterInput {
+  nickname: String!
+  password: String!
+  sex: String = "MALE"
+  headimg: String
+}

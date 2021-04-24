@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+# vscode history extension
+.history
+.vscode
+# prisma introspect
+datamodel-*
+.env
+yarn-error.log

@@ -1,0 +1,62 @@
+datasource postgresql {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserIdentifier {
+  id         Int       @id @default(autoincrement())
+  userId     String
+  identifier String    @unique
+  loginType  LoginType
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model UserProfile {
+  id        String   @id
+  nickname  String
+  sex       Sex
+  headimg   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model UserPassword {
+  id        String   @id
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model RegisterLog {
+  id         Int       @id
+  identifier String
+  loginType  LoginType
+  ip         String?
+  createdAt  DateTime  @default(now())
+}
+
+model LoginLog {
+  id         Int       @id
+  identifier String
+  loginType  LoginType
+  ip         String?
+  createdAt  DateTime  @default(now())
+}
+
+enum LoginType {
+  EMAIL
+  PHONE_NUMBER
+  WECHAT
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
