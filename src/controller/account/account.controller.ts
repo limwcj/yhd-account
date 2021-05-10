@@ -7,6 +7,6 @@ export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   async register(input: RegisterInput) {
-    return this.accountService.saveAccount(input);
+    return this.accountService.createAccount(input);
   }
 }

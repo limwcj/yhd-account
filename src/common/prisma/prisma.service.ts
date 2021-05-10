@@ -12,4 +12,8 @@ export class PrismaService {
     }
     this.client = new PrismaClient(options);
   }
+
+  transaction(txns: any[]) {
+    return this.client.$transaction(txns);
+  }
 }

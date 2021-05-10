@@ -17,8 +17,10 @@ export class RegisterInput {
   @Field({ nullable: true, defaultValue: Sex.MALE })
   @IsEnum(Sex)
   @IsOptional()
-  sex?: Sex;
+  sex: Sex;
 
   @Field({ nullable: true })
   headimg?: string;
+
+  ip?: string;
 }
