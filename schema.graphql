@@ -2,8 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AccountOutput {
+type LoginOutput {
   id: String!
+  identifier: String!
+  loginType: String!
   nickname: String!
   sex: String!
   headimg: String
@@ -14,16 +16,25 @@ type AccountOutput {
 scalar Date
 
 type Query {
-  accounts: AccountOutput!
+  accounts: LoginOutput!
 }
 
 type Mutation {
-  register(RegisterInput: RegisterInput!): AccountOutput!
+  register(RegisterInput: RegisterInput!): LoginOutput!
+  login(LoginInput: LoginInput!): LoginOutput!
 }
 
 input RegisterInput {
-  nickname: String!
+  identifier: String!
+  loginType: String = "NICKNAME"
+  nickname: String
   password: String!
   sex: String = "MALE"
   headimg: String
+}
+
+input LoginInput {
+  identifier: String!
+  loginType: String!
+  password: String!
 }

@@ -1,4 +1,4 @@
-import { Sex } from '.prisma/client';
+import { LoginType, Sex } from '.prisma/client';
 import { Field, InputType } from '@nestjs/graphql';
 import { IsEnum, IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator';
 
@@ -6,8 +6,21 @@ import { IsEnum, IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-vali
 export class RegisterInput {
   @Field()
   @IsNotEmpty()
+  @MaxLength(64)
+  @MinLength(1)
+  identifier: string;
+
+  @Field({ nullable: true, defaultValue: LoginType.NICKNAME })
+  @IsEnum(LoginType)
+  @IsOptional()
+  loginType: LoginType;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsNotEmpty()
   @MaxLength(20)
-  nickname: string;
+  @MinLength(1)
+  nickname?: string;
 
   @Field()
   @MaxLength(32)

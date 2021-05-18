@@ -9,4 +9,8 @@ export class UserIdentifierData {
   create(args: Prisma.UserIdentifierCreateArgs) {
     return this.prisma.client.userIdentifier.create(args);
   }
+
+  getByIdentifier(identifier: string) {
+    return this.prisma.client.userIdentifier.findUnique({ where: { identifier } });
+  }
 }

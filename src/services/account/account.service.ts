@@ -1,4 +1,4 @@
-import { LoginType, Prisma, RegisterLog, UserPassword, UserProfile } from '.prisma/client';
+import { LoginType, Prisma } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { flakeId, hmacSHA1 } from '../../common/utils';
@@ -8,7 +8,7 @@ import { UserIdentifierData } from '../../data/account/userIdetifier.data';
 import { UserPasswordData } from '../../data/account/userPassword.data';
 import { UserProfileData } from '../../data/account/userProfile.data';
 import { RegisterInput } from '../../dto/input/register.input';
-import { IdPrefix } from '../../types/interface';
+import { CreateAccountResult, IdPrefix } from '../../types/interface';
 
 @Injectable()
 export class AccountService {
@@ -24,24 +24,29 @@ export class AccountService {
     return IdPrefix.USER + flakeId();
   }
 
-  async createAccount(
-    input: RegisterInput,
-  ): Promise<{ createdUserProfile: UserProfile; createdUserPassword: UserPassword; createdRegisterLog: RegisterLog }> {
-    const { nickname, sex, headimg, password, ip } = input;
+  async createAccount(input: RegisterInput): Promise<CreateAccountResult> {
+    const { nickname, sex, headimg, password, ip, loginType, identifier } = input;
     const userId = this.createUserId();
     const encryptedPassword = hmacSHA1(password, config.pwdSalt);
 
+    const userIdentifier: Prisma.UserIdentifierCreateArgs = { data: { userId, loginType, identifier } };
     const userProfile: Prisma.UserProfileCreateArgs = { data: { id: userId, nickname, sex, headimg } };
     const userPassword: Prisma.UserPasswordCreateArgs = { data: { id: userId, password: encryptedPassword } };
     const registerLog: Prisma.RegisterLogCreateArgs = {
       data: { id: userId, loginType: LoginType.PHONE_NUMBER, identifier: userId, ip },
     };
     const txns = [
+      this.userIdentifierData.create(userIdentifier),
       this.userProfileData.create(userProfile),
       this.userPasswordData.create(userPassword),
       this.registerLogData.create(registerLog),
     ];
-    const [createdUserProfile, createdUserPassword, createdRegisterLog] = await this.prismaService.transaction(txns);
-    return { createdUserProfile, createdUserPassword, createdRegisterLog };
+    const [
+      createdUserIdentifier,
+      createdUserProfile,
+      createdUserPassword,
+      createdRegisterLog,
+    ] = await this.prismaService.transaction(txns);
+    return { createdUserIdentifier, createdUserProfile, createdUserPassword, createdRegisterLog };
   }
 }

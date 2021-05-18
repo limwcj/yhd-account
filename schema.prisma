@@ -51,6 +51,7 @@ model LoginLog {
 }
 
 enum LoginType {
+  NICKNAME
   EMAIL
   PHONE_NUMBER
   WECHAT

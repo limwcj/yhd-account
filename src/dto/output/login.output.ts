@@ -1,10 +1,16 @@
-import { Sex } from '.prisma/client';
+import { LoginType, Sex } from '.prisma/client';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class AccountOutput {
+export class LoginOutput {
   @Field()
   id: string;
+
+  @Field()
+  identifier: string;
+
+  @Field()
+  loginType: LoginType;
 
   @Field()
   nickname: string;
